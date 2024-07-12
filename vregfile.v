@@ -1,4 +1,4 @@
-module regfile (
+module vregfile (
 	clk,
 	we3,
 	ra1,
