@@ -1,8 +1,8 @@
 module valu (
-	VsrcA, VsrcB, ALUControl, VALUResult, ALUFlags, vector_op, Op, Funct, index
+	VSrcA, VSrcB, ALUControl, VALUResult, ALUFlags, vector_op, Op, Funct, index
 );
-	input [31:0] VsrcA [0:4];
-	input [31:0] VsrcB [0:4];
+	input [31:0] VSrcA [0:4];
+	input [31:0] VSrcB [0:4];
 	input [2:0] ALUControl;
 	input wire [2:0] index;
 	input wire vector_op;
@@ -27,20 +27,21 @@ module valu (
 	assign sum[3] = VSrcA[3] + condinvb[3] + ALUControl[0];
 	assign sum[4] = VSrcA[4] + condinvb[4] + ALUControl[0];
 
-
+    integer i;
 	always @(*) begin
 		if (vector_op) begin
-			for (integer i = 0; i < index; i = i + 1) begin
+			for (i = 0; i < index; i = i + 1) begin
 				case (ALUControl)
 					3'b000: VALUResult[i] = sum[i]; // VADD
 					3'b001: VALUResult[i] = sum[i]; // VSUB
-					3'b010: VALUResult[i] = VsrcA[i] & VsrcB[i]; // VAND
-					3'b011: VALUResult[i] = VsrcA[i] | VsrcB[i]; // VOR
-					3'b100: VALUResult[i] = VsrcA[i] ^ VsrcB[i]; // VXOR
-					3'b110: mult(VsrcA[i], VsrcB[i], vector_result[i]); // VMUL
+					3'b010: VALUResult[i] = VSrcA[i] & VSrcB[i]; // VAND
+					3'b011: VALUResult[i] = VSrcA[i] | VSrcB[i]; // VOR
+					3'b100: VALUResult[i] = VSrcA[i] ^ VSrcB[i]; // VXOR
+					3'b110: mult(VSrcA[i], VSrcB[i], vector_result[i]); // VMUL
 					default: VALUResult[i] = 32'b0;
 				endcase
-			end
+			end 
+		end
 		else begin
 			case (ALUControl)
 				3'b000: VALUResult = 32'bx;
@@ -49,7 +50,6 @@ module valu (
 				3'b011: VALUResult = 32'bx;
 				default: VALUResult = 32'bx;
 			endcase
-			end
 		end
 	end
 
