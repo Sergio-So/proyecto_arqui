@@ -42,15 +42,6 @@ module valu (
 				endcase
 			end 
 		end
-		else begin
-			case (ALUControl)
-				3'b000: VALUResult = 32'bx;
-				3'b001: VALUResult = 32'bx;
-				3'b010: VALUResult = 32'bx;
-				3'b011: VALUResult = 32'bx;
-				default: VALUResult = 32'bx;
-			endcase
-		end
 	end
 
 	//assign neg = ALUResult[31];
