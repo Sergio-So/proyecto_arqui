@@ -50,25 +50,33 @@ module decode (
 	always @(*)
 		if (ALUOp) begin
 			case (Funct[4:1])
-				4'b0100:begin
+				4'b0100:begin//suma
 				    ALUControl = 3'b000;
 				    mov = 0;
 				    end
-				4'b0010:begin
-				ALUControl = 3'b001;
-				mov = 0;
+				4'b0010:begin//resta
+					ALUControl = 3'b001;
+					mov = 0;
 				end
-				4'b0000:begin
-				ALUControl = 3'b010;
-				mov = 0;
+				4'b0000:begin//and
+					ALUControl = 3'b010;
+					mov = 0;
 				end
-				4'b1100:begin 
-				ALUControl = 3'b011;
-				mov = 0;
+				4'b1100:begin//or
+					ALUControl = 3'b011;
+					mov = 0;
 				end
-				4'b1101:begin
-				ALUControl = 3'b000;
-				mov = 1;
+				4'b1101:begin//mov
+					ALUControl = 3'b000;
+					mov = 1;
+				end
+				4'b0001:begin// VXOR
+				    ALUControl = 3'b100;
+				    mov = 0;
+				end
+				4'b0000:begin// VMUL
+				    ALUControl = 3'b110;
+				    mov = 0;
 				end
 				default: ALUControl = 3'bxxx;
 			endcase
