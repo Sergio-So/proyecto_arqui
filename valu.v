@@ -1,44 +1,101 @@
 module valu (
-	VSrcA, VSrcB, ALUControl, VALUResult, ALUFlags, vector_op, Op, Funct, index
+	rd1, rd2, rd3, rd4, rd5, rd6, rd7, rd8, rd9, rd10, ALUControl, VALUResultA, VALUResultB, VALUResultC, VALUResultD, VALUResultE, ALUFlags, vector_op, Op, Funct, index
 );
-	input [31:0] VSrcA [0:4];
-	input [31:0] VSrcB [0:4];
+	//input [31:0] VSrcA [0:4];
+	input [31:0] rd1;
+	input [31:0] rd2;
+	input [31:0] rd3;
+	input [31:0] rd4;
+	input [31:0] rd5;
+	//input [31:0] VSrcB [0:4];
+	input [31:0] rd6;
+	input [31:0] rd7;
+	input [31:0] rd8;
+	input [31:0] rd9;
+	input [31:0] rd10;
+
 	input [2:0] ALUControl;
 	input wire [2:0] index;
 	input wire vector_op;
 	input wire [1:0] Op;
 	input wire [5:0] Funct;
-	output reg [31:0] VALUResult[0:4];
+	output reg [31:0] VALUResultA;
+	output reg [31:0] VALUResultB;
+	output reg [31:0] VALUResultC;
+	output reg [31:0] VALUResultD;
+	output reg [31:0] VALUResultE;
 	output wire [3:0] ALUFlags;
 
 	wire neg, zero, carry, overflow;
+	wire [31:0] ov1, ov2, ov3, ov4, ov5;
 	wire [31:0] condinvb[0:4];
 	wire [32:0] sum [0:4];
 	reg [31:0] vector_result [0:4];
 
-	assign condinvb[0] = ALUControl[0] ? ~VSrcB[0] : VSrcB[0];
-	assign condinvb[1] = ALUControl[0] ? ~VSrcB[1] : VSrcB[1];
-	assign condinvb[2] = ALUControl[0] ? ~VSrcB[2] : VSrcB[2];
-	assign condinvb[3] = ALUControl[0] ? ~VSrcB[3] : VSrcB[3];
-	assign condinvb[4] = ALUControl[0] ? ~VSrcB[4] : VSrcB[4];
-	assign sum[0] = VSrcA[0] + condinvb[0] + ALUControl[0];
-	assign sum[1] = VSrcA[1] + condinvb[1] + ALUControl[0];
-	assign sum[2] = VSrcA[2] + condinvb[2] + ALUControl[0];
-	assign sum[3] = VSrcA[3] + condinvb[3] + ALUControl[0];
-	assign sum[4] = VSrcA[4] + condinvb[4] + ALUControl[0];
+	assign condinvb[0] = ALUControl[0] ? ~rd6 : rd6;
+	assign condinvb[1] = ALUControl[0] ? ~rd7 : rd7;
+	assign condinvb[2] = ALUControl[0] ? ~rd8 : rd8;
+	assign condinvb[3] = ALUControl[0] ? ~rd9 : rd9;
+	assign condinvb[4] = ALUControl[0] ? ~rd10 : rd10;
+	assign sum[0] = rd1 + condinvb[0] + ALUControl[0];
+	assign sum[1] = rd2 + condinvb[1] + ALUControl[0];
+	assign sum[2] = rd3 + condinvb[2] + ALUControl[0];
+	assign sum[3] = rd4 + condinvb[3] + ALUControl[0];
+	assign sum[4] = rd5 + condinvb[4] + ALUControl[0];
 
-    integer i;
 	always @(*) begin
 		if (vector_op) begin
-			for (i = 0; i < index; i = i + 1) begin
+			begin
 				case (ALUControl)
-					3'b000: VALUResult[i] = sum[i]; // VADD
-					3'b001: VALUResult[i] = sum[i]; // VSUB
-					3'b010: VALUResult[i] = VSrcA[i] & VSrcB[i]; // VAND
-					3'b011: VALUResult[i] = VSrcA[i] | VSrcB[i]; // VOR
-					3'b100: VALUResult[i] = VSrcA[i] ^ VSrcB[i]; // VXOR
-					3'b110: mult(VSrcA[i], VSrcB[i], vector_result[i]); // VMUL
-					default: VALUResult[i] = 32'b0;
+					3'b000:  // VADD
+					begin 
+						VALUResultA = sum[0];
+						VALUResultB = sum[1];
+						VALUResultC = sum[2];
+						VALUResultD = sum[3];
+						VALUResultE = sum[4];
+					end
+					3'b001: // VSUB
+					begin
+						VALUResultA = sum[0];
+						VALUResultB = sum[1];
+						VALUResultC = sum[2];
+						VALUResultD = sum[3];
+						VALUResultE = sum[4];
+					end
+					3'b010: // VAND
+					begin
+						VALUResultA = rd1 & rd6;
+						VALUResultB = rd2 & rd7;
+						VALUResultC = rd3 & rd8;
+						VALUResultD = rd4 & rd9;
+						VALUResultE = rd5 & rd10;
+					end
+					3'b011: // VOR
+					begin
+						VALUResultA = rd1 | rd6;
+						VALUResultB = rd2 | rd7;
+						VALUResultC = rd3 | rd8;
+						VALUResultD = rd4 | rd9;
+						VALUResultE = rd5 | rd10;
+					end
+					3'b100: // VXOR
+					begin
+						VALUResultA = rd1 ^ rd6;
+						VALUResultB = rd2 ^ rd7;
+						VALUResultC = rd3 ^ rd8;
+						VALUResultD = rd4 ^ rd9;
+						VALUResultE = rd5 ^ rd10;
+					end
+					3'b110: // VMUL
+					begin
+					   //mult mul(.a(rd1), .b(rd6), .result(VALUResultA), .overflow(ov1));
+						mult Vmult1(.a(rd1), .b(rd6), .result(VALUResultA), .overflow(ov1));
+						mult Vmult2(.a(rd2), .b(rd7), .result(VALUResultB), .overflow(ov2));
+						mult Vmult3(.a(rd3), .b(rd8), .result(VALUResultC), .overflow(ov3));
+						mult Vmult4(.a(rd4), .b(rd9), .result(VALUResultD), .overflow(ov4));
+						mult Vmult5(.a(rd5), .b(rd10), .result(VALUResultE), .overflow(ov5));
+					end
 				endcase
 			end 
 		end
@@ -50,3 +107,4 @@ module valu (
 	//assign overflow = ~ALUControl[1] & ~(VSrcA[0][31] ^ VSrcB[0][31] ^ ALUControl[0]) & (VSrcA[0][31] ^ sum[31][0]);
 	//assign ALUFlags = {neg, zero, carry, overflow};
 endmodule
+
