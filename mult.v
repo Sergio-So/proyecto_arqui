@@ -7,5 +7,5 @@ module mult (
 	wire [64:0] rs;
     assign rs = a * b; // Multiplicación
 	assign result = rs[31:0];
-	assign overflow = rs[64:32];
+	assign overflow = rs[63:32];
 endmodule
