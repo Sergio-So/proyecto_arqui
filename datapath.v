@@ -54,7 +54,7 @@ module datapath (
 
 	assign a = Instr[27:26];
 	assign b = Instr[25:20];
-	assign vector_op = (Instr[31:28] == 4'b1111);
+	assign vector_op = (Instr[31:28] == 4'b1111);
 	assign vwe3 = (vector_op & RegWrite);
 	assign vector_size = Instr[6:4];
 	
@@ -160,16 +160,16 @@ module datapath (
 	);
 
 	valu valu(
-		.RD1(rd1),
-		.RD2(rd2),
-		.RD3(rd3),
-		.RD4(rd4),
-		.RD5(rd5),
-		.RD6(rd6),
-		.RD7(rd7),
-		.RD8(rd8),
-		.RD9(rd9),
-		.RD10(rd10),
+		.rd1(rd1),
+		.rd2(rd2),
+		.rd3(rd3),
+		.rd4(rd4),
+		.rd5(rd5),
+		.rd6(rd6),
+		.rd7(rd7),
+		.rd8(rd8),
+		.rd9(rd9),
+		.rd10(rd10),
 		.ALUControl(ALUControl),
 		.VALUResultA(VALUResultA),
 		.VALUResultB(VALUResultB),
