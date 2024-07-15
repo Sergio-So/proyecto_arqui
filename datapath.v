@@ -26,6 +26,7 @@ module datapath (
 	input wire MemtoReg;
 	input wire PCSrc;
 	input wire mov;
+
 	output wire [3:0] ALUFlags;
 	output wire [31:0] PC;
 	input wire [31:0] Instr;
@@ -41,12 +42,21 @@ module datapath (
 	wire [31:0] Result;
 	wire [3:0] RA1;
 	wire [3:0] RA2;
-	wire [31:0]toalu;
+	wire [31:0] toalu;
 	wire [1:0] a;
 	wire [5:0] b;
-	
+	wire vector_op;
+	wire vwe3;
+	wire vector_size;
+	wire [31:0] VALUResultA,VALUResultB, VALUResultC, VALUResultD, VALUResultE;
+	wire [31:0] rd1, rd2, rd3, rd4, rd5, rd6, rd7, rd8, rd9, rd10;
+	wire [3:0] VALUFlags;
+
 	assign a = Instr[27:26];
 	assign b = Instr[25:20];
+	assign vector_op = (Instr[31:28] == 4'b1111);
+	assign vwe3 = (vector_op & RegWrite);
+	assign vector_size = Instr[6:4];
 	
 	mux2 #(32) pcmux(
 		.d0(PCPlus4),
@@ -93,6 +103,32 @@ module datapath (
 		.rd1(SrcA),
 		.rd2(WriteData)
 	);
+
+	vregfile vrf(
+		.clk(clk),
+		.we3(vwe3),
+		.vector_op(vector_op),
+		.vector_size(vector_size),
+		.ra1(RA1),
+		.ra2(RA2),
+		.wa3(Instr[15:12]),
+		.wd1(VALUResultA),
+		.wd2(VALUResultB),
+		.wd3(VALUResultC),
+		.wd4(VALUResultD),
+		.wd5(VALUResultE),
+		.rd1(rd1),
+		.rd2(rd2),
+		.rd3(rd3),
+		.rd4(rd4),
+		.rd5(rd5),
+		.rd6(rd6),
+		.rd7(rd7),
+		.rd8(rd8),
+		.rd9(rd9),
+		.rd10(rd10)
+	);
+
 	
 	extend ext(
 		.Instr(Instr[23:0]),
@@ -121,6 +157,27 @@ module datapath (
 		.ALUFlags(ALUFlags),
 		.Op(a),
 		.Funct(b)
+	);
+
+	valu valu(
+		.RD1(rd1),
+		.RD2(rd2),
+		.RD3(rd3),
+		.RD4(rd4),
+		.RD5(rd5),
+		.RD6(rd6),
+		.RD7(rd7),
+		.RD8(rd8),
+		.RD9(rd9),
+		.RD10(rd10),
+		.ALUControl(ALUControl),
+		.VALUResultA(VALUResultA),
+		.VALUResultB(VALUResultB),
+		.VALUResultC(VALUResultC),
+		.VALUResultD(VALUResultD),
+		.VALUResultE(VALUResultE),
+		.ALUFlags(VALUFlags),
+		.Op(a)
 	);
 	
 	mux2 #(32) resmux(
