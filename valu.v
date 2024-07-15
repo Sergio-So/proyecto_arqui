@@ -2,17 +2,17 @@ module valu (
 	rd1, rd2, rd3, rd4, rd5, rd6, rd7, rd8, rd9, rd10, ALUControl, VALUResultA, VALUResultB, VALUResultC, VALUResultD, VALUResultE, ALUFlags, vector_op, Op, Funct, index
 );
 	//input [31:0] VSrcA [0:4];
-	input [31:0] rd1;
-	input [31:0] rd2;
-	input [31:0] rd3;
-	input [31:0] rd4;
-	input [31:0] rd5;
+	input wire [31:0] rd1;
+	input wire [31:0] rd2;
+	input wire [31:0] rd3;
+	input wire [31:0] rd4;
+	input wire [31:0] rd5;
 	//input [31:0] VSrcB [0:4];
-	input [31:0] rd6;
-	input [31:0] rd7;
-	input [31:0] rd8;
-	input [31:0] rd9;
-	input [31:0] rd10;
+	input wire [31:0] rd6;
+	input wire [31:0] rd7;
+	input wire [31:0] rd8;
+	input wire [31:0] rd9;
+	input wire [31:0] rd10;
 
 	input [2:0] ALUControl;
 	input wire [2:0] index;
@@ -42,7 +42,15 @@ module valu (
 	assign sum[2] = rd3 + condinvb[2] + ALUControl[0];
 	assign sum[3] = rd4 + condinvb[3] + ALUControl[0];
 	assign sum[4] = rd5 + condinvb[4] + ALUControl[0];
-
+	
+	wire [31:0] mul1res, mul2res, mul3res, mul4res, mul5res;
+    
+    mult mul1(.a(rd1), .b(rd6), .result(mul1res), .overflow(ov1));
+    mult mul2(.a(rd2), .b(rd7), .result(mul2res), .overflow(ov2));
+    mult mul3(.a(rd3), .b(rd8), .result(mul3res), .overflow(ov3));
+    mult mul4(.a(rd4), .b(rd9), .result(mul4res), .overflow(ov4));
+    mult mul5(.a(rd5), .b(rd10), .result(mul5res), .overflow(ov5));
+    
 	always @(*) begin
 		if (vector_op) begin
 			begin
@@ -88,19 +96,18 @@ module valu (
 						VALUResultE = rd5 ^ rd10;
 					end
 					3'b110: // VMUL
-					begin
-					   //mult mul(.a(rd1), .b(rd6), .result(VALUResultA), .overflow(ov1));
-						mult Vmult1(.a(rd1), .b(rd6), .result(VALUResultA), .overflow(ov1));
-						mult Vmult2(.a(rd2), .b(rd7), .result(VALUResultB), .overflow(ov2));
-						mult Vmult3(.a(rd3), .b(rd8), .result(VALUResultC), .overflow(ov3));
-						mult Vmult4(.a(rd4), .b(rd9), .result(VALUResultD), .overflow(ov4));
-						mult Vmult5(.a(rd5), .b(rd10), .result(VALUResultE), .overflow(ov5));
-					end
+                    begin
+						VALUResultA = mul1res;
+						VALUResultB = mul2res;
+						VALUResultC = mul3res;
+						VALUResultD = mul4res;
+						VALUResultE = mul5res;
+                    end
 				endcase
 			end 
 		end
 	end
-
+    
 	//assign neg = ALUResult[31];
 	//assign zero = (ALUResult == 32'b0);
 	//assign carry = ~ALUControl[1] & sum[32];
