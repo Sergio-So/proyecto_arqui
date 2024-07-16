@@ -184,7 +184,8 @@ module datapath (
 		.VALUResultD(VALUResultD),
 		.VALUResultE(VALUResultE),
 		.ALUFlags(VALUFlags),
-		.Op(a)
+		.Op(a),
+		.vector_op(vector_op)
 	);
 	
 	mux2 #(32) resmux(
