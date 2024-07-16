@@ -47,17 +47,23 @@ module datapath (
 	wire [5:0] b;
 	wire vector_op;
 	wire vwe3;
-	wire vector_size;
+	wire [3:0] vector_size;
 	wire [31:0] VALUResultA,VALUResultB, VALUResultC, VALUResultD, VALUResultE;
 	wire [31:0] rd1, rd2, rd3, rd4, rd5, rd6, rd7, rd8, rd9, rd10;
 	wire [3:0] VALUFlags;
 	wire [31:0] rslt;
+	wire [3:0] ab;
+	wire [3:0] cd;
+	wire [3:0] ef;
 
 	assign a = Instr[27:26];
 	assign b = Instr[25:20];
 	assign vector_op = (Instr[31:28] == 4'b1111);
 	assign vwe3 = (vector_op & RegWrite);
 	assign vector_size = Instr[6:4];
+	assign ab = Instr[19:16];
+	assign cd = Instr[3:0];
+	assign ef = Instr[15:12];
 	
 	mux2 #(32) pcmux(
 		.d0(PCPlus4),
@@ -110,9 +116,9 @@ module datapath (
 		.we3(vwe3),
 		.vector_op(vector_op),
 		.vector_size(vector_size),
-		.ra1(Instr[19:16),
-		.ra2(Instr[3:0),
-		.wa3(Instr[15:12]),
+		.ra1(ab),
+		.ra2(cd),
+		.wa3(ef),
 		.wd1(VALUResultA),
 		.wd2(VALUResultB),
 		.wd3(VALUResultC),
