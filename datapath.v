@@ -51,6 +51,7 @@ module datapath (
 	wire [31:0] VALUResultA,VALUResultB, VALUResultC, VALUResultD, VALUResultE;
 	wire [31:0] rd1, rd2, rd3, rd4, rd5, rd6, rd7, rd8, rd9, rd10;
 	wire [3:0] VALUFlags;
+	wire [31:0] rslt;
 
 	assign a = Instr[27:26];
 	assign b = Instr[25:20];
@@ -184,6 +185,13 @@ module datapath (
 		.d0(ALUResult),
 		.d1(ReadData),
 		.s(MemtoReg),
+		.y(rslt)
+	);
+
+	mux2 #(32) vectormux(
+		.d0(rslt),
+		.d1(VALUResultA),
+		.s(vector_op),
 		.y(Result)
 	);
 endmodule
