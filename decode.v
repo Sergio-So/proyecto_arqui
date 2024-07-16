@@ -50,19 +50,19 @@ module decode (
 	always @(*)
 		if (ALUOp) begin
 			case (Funct[4:1])
-				4'b0100:begin//suma
+				4'b0100:begin//VADD
 				    ALUControl = 3'b000;
 				    mov = 0;
 				    end
-				4'b0010:begin//resta
+				4'b0010:begin//VSUB
 					ALUControl = 3'b001;
 					mov = 0;
 				end
-				4'b0000:begin//and
+				4'b0000:begin//VAND
 					ALUControl = 3'b010;
 					mov = 0;
 				end
-				4'b1100:begin//or
+				4'b1100:begin//VOR
 					ALUControl = 3'b011;
 					mov = 0;
 				end
@@ -74,7 +74,7 @@ module decode (
 				    ALUControl = 3'b100;
 				    mov = 0;
 				end
-				4'b0000:begin// VMUL
+				4'b1111:begin// VMUL
 				    ALUControl = 3'b110;
 				    mov = 0;
 				end
