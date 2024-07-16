@@ -1,6 +1,5 @@
 module vregfile (
     input wire clk,
-    input wire we3,
     input wire vector_op,
     input wire [2:0] vector_size,
     input wire [3:0] ra1,
@@ -23,10 +22,10 @@ module vregfile (
     output wire [31:0] rd10
 );
     reg [31:0] rf [0:14][0:4];
-   
+
     
     always @(posedge clk) begin
-        if (we3 && vector_op) begin
+        if (vector_op) begin
             if (vector_size >= 1) rf[wa3][0] <= wd1;
             if (vector_size >= 2) rf[wa3][1] <= wd2;
             if (vector_size >= 3) rf[wa3][2] <= wd3;
