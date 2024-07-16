@@ -1,5 +1,5 @@
 module valu (
-	rd1, rd2, rd3, rd4, rd5, rd6, rd7, rd8, rd9, rd10, ALUControl, VALUResultA, VALUResultB, VALUResultC, VALUResultD, VALUResultE, ALUFlags, vector_op, Op, Funct, index
+	rd1, rd2, rd3, rd4, rd5, rd6, rd7, rd8, rd9, rd10, ALUControl, VALUResultA, VALUResultB, VALUResultC, VALUResultD, VALUResultE, vector_op, Op
 );
 	//input [31:0] VSrcA [0:4];
 	input wire [31:0] rd1;
@@ -15,18 +15,14 @@ module valu (
 	input wire [31:0] rd10;
 
 	input [2:0] ALUControl;
-	input wire [2:0] index;
 	input wire vector_op;
 	input wire [1:0] Op;
-	input wire [5:0] Funct;
 	output reg [31:0] VALUResultA;
 	output reg [31:0] VALUResultB;
 	output reg [31:0] VALUResultC;
 	output reg [31:0] VALUResultD;
 	output reg [31:0] VALUResultE;
-	output wire [3:0] ALUFlags;
 
-	wire neg, zero, carry, overflow;
 	wire [31:0] ov1, ov2, ov3, ov4, ov5;
 	wire [31:0] condinvb[0:4];
 	wire [32:0] sum [0:4];
@@ -96,22 +92,26 @@ module valu (
 						VALUResultE = rd5 ^ rd10;
 					end
 					3'b110: // VMUL
-                    begin
+                   			 begin
 						VALUResultA = mul1res;
 						VALUResultB = mul2res;
 						VALUResultC = mul3res;
 						VALUResultD = mul4res;
 						VALUResultE = mul5res;
-                    end
+                    			end
+
 				endcase
 			end 
 		end
+		else
+                begin
+                VALUResultA = 32'bx;
+                VALUResultB = 32'bx;
+                VALUResultC = 32'bx;
+                VALUResultD = 32'bx;
+                VALUResultE = 32'bx;
+                end
+        
 	end
-    
-	//assign neg = ALUResult[31];
-	//assign zero = (ALUResult == 32'b0);
-	//assign carry = ~ALUControl[1] & sum[32];
-	//assign overflow = ~ALUControl[1] & ~(VSrcA[0][31] ^ VSrcB[0][31] ^ ALUControl[0]) & (VSrcA[0][31] ^ sum[31][0]);
-	//assign ALUFlags = {neg, zero, carry, overflow};
 endmodule
 
