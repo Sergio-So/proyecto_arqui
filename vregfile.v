@@ -48,15 +48,16 @@ module vregfile (
     
     end
     
-    assign rd1 = (vector_op && vector_size >= 1) ? rf[ra1][0] : 32'b0;
-    assign rd2 = (vector_op && vector_size >= 2) ? rf[ra1][1] : 32'b0;
-    assign rd3 = (vector_op && vector_size >= 3) ? rf[ra1][2] : 32'bx;
-    assign rd4 = (vector_op && vector_size >= 4) ? rf[ra1][3] : 32'bx;
-    assign rd5 = (vector_op && vector_size >= 5) ? rf[ra1][4] : 32'bx;
-    assign rd6 = (vector_op && vector_size >= 1) ? rf[ra2][0] : 32'bx;
-    assign rd7 = (vector_op && vector_size >= 2) ? rf[ra2][1] : 32'bx;
-    assign rd8 = (vector_op && vector_size >= 3) ? rf[ra2][2] : 32'bx;
-    assign rd9 = (vector_op && vector_size >= 4) ? rf[ra2][3] : 32'bx;
-    assign rd10 = (vector_op && vector_size >= 5) ? rf[ra2][4] : 32'bx;
+    
+    assign rd1 = (vector_op & vector_size >= 1) ? rf[ra1][0] : 32'bx;
+    assign rd2 = (vector_op & vector_size >= 2) ? rf[ra1][1] : 32'bx;
+    assign rd3 = (vector_op & vector_size >= 3) ? rf[ra1][2] : 32'bx;
+    assign rd4 = (vector_op & vector_size >= 4) ? rf[ra1][3] : 32'bx;
+    assign rd5 = (vector_op & vector_size >= 5) ? rf[ra1][4] : 32'bx;
+    assign rd6 = (vector_op & vector_size >= 1) ? rf[ra2][0] : 32'bx;
+    assign rd7 = (vector_op & vector_size >= 2) ? rf[ra2][1] : 32'bx;
+    assign rd8 = (vector_op & vector_size >= 3) ? rf[ra2][2] : 32'bx;
+    assign rd9 = (vector_op & vector_size >= 4) ? rf[ra2][3] : 32'bx;
+    assign rd10 = (vector_op & vector_size >= 5) ? rf[ra2][4] : 32'bx;
 
 endmodule
