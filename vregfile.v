@@ -23,6 +23,8 @@ module vregfile (
     output wire [31:0] rd10
 );
     reg [31:0] rf [0:14][0:4];
+   
+    
     always @(posedge clk) begin
         if (we3 && vector_op) begin
             if (vector_size >= 1) rf[wa3][0] <= wd1;
@@ -32,8 +34,22 @@ module vregfile (
             if (vector_size >= 5) rf[wa3][4] <= wd5;
         end
     end
-    assign rd1 = (vector_op && vector_size >= 1) ? rf[ra1][0] : 32'bx;
-    assign rd2 = (vector_op && vector_size >= 2) ? rf[ra1][1] : 32'bx;
+    initial begin
+    rf[1][0] = 32'H00000002;
+    rf[1][1] = 32'H00000002;
+    rf[1][2] = 32'H00000002;
+    rf[1][3] = 32'H00000002;
+    rf[1][4] = 32'H00000002;
+    rf[2][0] = 32'H00000003;
+    rf[2][1] = 32'H00000004;
+    rf[2][2] = 32'H00000005;
+    rf[2][3] = 32'H00000006;
+    rf[2][4] = 32'H00000007;
+    
+    end
+    
+    assign rd1 = (vector_op && vector_size >= 1) ? rf[ra1][0] : 32'b0;
+    assign rd2 = (vector_op && vector_size >= 2) ? rf[ra1][1] : 32'b0;
     assign rd3 = (vector_op && vector_size >= 3) ? rf[ra1][2] : 32'bx;
     assign rd4 = (vector_op && vector_size >= 4) ? rf[ra1][3] : 32'bx;
     assign rd5 = (vector_op && vector_size >= 5) ? rf[ra1][4] : 32'bx;
