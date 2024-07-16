@@ -47,7 +47,7 @@ module datapath (
 	wire [5:0] b;
 	wire vector_op;
 	wire vwe3;
-	wire [3:0] vector_size;
+	wire [2:0] vector_size;
 	wire [31:0] VALUResultA,VALUResultB, VALUResultC, VALUResultD, VALUResultE;
 	wire [31:0] rd1, rd2, rd3, rd4, rd5, rd6, rd7, rd8, rd9, rd10;
 	wire [3:0] VALUFlags;
