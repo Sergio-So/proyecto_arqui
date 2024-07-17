@@ -40,6 +40,7 @@ module valu (
 	assign sum[4] = rd5 + condinvb[4] + ALUControl[0];
 	
 	wire [31:0] mul1res, mul2res, mul3res, mul4res, mul5res;
+	wire [31:0] fadd1, fadd2, fadd3, fadd4, fadd5;
     
     mult mul1(.a(rd1), .b(rd6), .result(mul1res), .overflow(ov1));
     mult mul2(.a(rd2), .b(rd7), .result(mul2res), .overflow(ov2));
@@ -47,9 +48,23 @@ module valu (
     mult mul4(.a(rd4), .b(rd9), .result(mul4res), .overflow(ov4));
     mult mul5(.a(rd5), .b(rd10), .result(mul5res), .overflow(ov5));
     
+    floating_point_adder fpadd1(.a(rd1), .b(rd6), .selector(1'b0), .sum(fadd1));
+    floating_point_adder fpadd2(.a(rd2), .b(rd7), .selector(1'b0), .sum(fadd2));
+    floating_point_adder fpadd3(.a(rd3), .b(rd8), .selector(1'b0), .sum(fadd3));
+    floating_point_adder fpadd4(.a(rd4), .b(rd9), .selector(1'b0), .sum(fadd4));
+    floating_point_adder fpadd5(.a(rd5), .b(rd10), .selector(1'b0), .sum(fadd5));
+    
 	always @(*) begin
 		if (vector_op) begin
 			begin
+			if (Op== 2'b11) begin//juntando el FADD en vectores para VADDFP
+			     VALUResultA = fadd1;
+			     VALUResultB = fadd2;
+			     VALUResultC = fadd3;
+			     VALUResultD = fadd4;
+			     VALUResultE = fadd5;
+			end
+			else begin
 				case (ALUControl)
 					3'b000:  // VADD
 					begin 
@@ -92,7 +107,7 @@ module valu (
 						VALUResultE = rd5 ^ rd10;
 					end
 					3'b110: // VMUL
-                   			 begin
+                    			begin
 						VALUResultA = mul1res;
 						VALUResultB = mul2res;
 						VALUResultC = mul3res;
@@ -101,6 +116,7 @@ module valu (
                     			end
 
 				endcase
+				end
 			end 
 		end
 		else
