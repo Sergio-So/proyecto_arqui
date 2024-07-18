@@ -1,0 +1,9 @@
+E04F000F //sub r0,pc,pc
+
+F0813032 // VADD V3,V1,V2 Vector_size=3
+F0423021 // VSUB V3,V2,V1 Vector_size=2
+F0013012 // VAND V3,V1,V2 Vector_size=1
+F1813042 // VOR V3,V1,V2 Vector_size=4
+F0213052 // VXOR V3,V1,V2 Vector_size=5
+F1E13052 // VMUL V3,V1,V2 Vector_size=5
+F0835034 // VADD V5,V3,V4 Vector_size=5

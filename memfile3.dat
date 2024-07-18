@@ -1,0 +1,5 @@
+E04F000F //sub r0,pc,pc
+
+FC813052 // VADDFP V3,V1,V2 Vector_size=5
+FC879058 // VADDFP V9,V7,V8, Vector_size=5
+FC89A036 // VADDFP V10,V9,V6, Vector_size=3
